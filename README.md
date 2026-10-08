@@ -2,6 +2,9 @@
 
 Drop-in LinkedIn skill for Meta's Muse AI: publish posts, read your profile, and list recent posts. Secure token-based connector — just bring your own LinkedIn access token:
 
+> 🌐 **Live site:** https://gman0n.github.io/muse-linkedin-skill/
+> 📦 **One-click download page:** https://muse.ai/s/linkedin-skill-for-muse-xby6bxyjxjxmqhxr
+
 - `profile` — read your profile (name, headline, LinkedIn ID)
 - `post` — publish a text post (**only** with your explicit approval of the exact text, every time)
 - `posts` — list your recent posts (needs an extra LinkedIn approval — see below)

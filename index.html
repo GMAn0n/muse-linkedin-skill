@@ -3,41 +3,299 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LinkedIn skill for Muse</title>
+<title>LinkedIn Skill for Muse — Post, read &amp; engage on LinkedIn from Muse</title>
+<meta name="description" content="Free, MIT-licensed skill that lets Meta's Muse AI operate your LinkedIn account: publish posts, read your profile, and list recent posts through a secure token-based LinkedIn API integration. Setup takes about 5 minutes.">
+<link rel="canonical" href="https://gman0n.github.io/muse-linkedin-skill/">
+<meta name="robots" content="index, follow">
+<!-- Google Search Console verification: paste the <meta name="google-site-verification" ...> tag here once issued -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="LinkedIn Skill for Muse — Post, read &amp; engage on LinkedIn from Muse">
+<meta property="og:description" content="Free, MIT-licensed skill that lets Meta's Muse AI operate your LinkedIn account: publish posts, read your profile, and list recent posts. Setup takes about 5 minutes.">
+<meta property="og:url" content="https://gman0n.github.io/muse-linkedin-skill/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LinkedIn Skill for Muse — Post, read &amp; engage on LinkedIn from Muse">
+<meta name="twitter:description" content="Free, MIT-licensed skill that lets Meta's Muse AI operate your LinkedIn account: publish posts, read your profile, and list recent posts.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LinkedIn Skill for Muse",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (Python 3.8+)",
+  "description": "Free, MIT-licensed skill that lets Meta's Muse AI operate your LinkedIn account: publish posts, read your profile, and list recent posts through a secure token-based LinkedIn API integration.",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "license": "https://opensource.org/licenses/MIT",
+  "author": { "@type": "Person", "name": "GMAn0n" },
+  "codeRepository": "https://github.com/GMAn0n/muse-linkedin-skill",
+  "featureList": [
+    "Publish text posts to LinkedIn (approval-gated)",
+    "Read your LinkedIn profile",
+    "List your recent posts with engagement",
+    "Secure token-based connector — no client ID or secret needed",
+    "Dry-run post previews",
+    "Public or connections-only visibility"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://gman0n.github.io/" },
+    { "@type": "ListItem", "position": 2, "name": "LinkedIn Skill for Muse", "item": "https://gman0n.github.io/muse-linkedin-skill/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to connect the LinkedIn Skill for Muse",
+  "description": "Connect your LinkedIn account to Muse in about 5 minutes using your own LinkedIn access token.",
+  "totalTime": "PT5M",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Create a LinkedIn developer app",
+      "text": "Go to the LinkedIn Developer Portal and open or create an app. Under Products, enable 'Share on LinkedIn' (lets the skill publish posts) and 'Sign In with LinkedIn using OpenID Connect' (lets the skill read your profile)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Mint an access token",
+      "text": "Use the portal's token generator to mint an access token with those scopes and copy it. No client ID or client secret is ever needed by the skill."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Install the skill files",
+      "text": "Copy the linkedin/ folder into your Muse workspace at ~/workspace/skills/linkedin/."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Connect in Muse",
+      "text": "In chat, ask Muse: 'set up a LinkedIn connector.' Muse gives you a secure form — paste your access token there. It goes straight to the platform vault; never paste it in chat."
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I connect my LinkedIn account to Muse?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Create an app in the LinkedIn Developer Portal, enable the Share on LinkedIn and Sign In with OpenID Connect products, mint an access token with the portal's token generator, copy the linkedin/ skill folder to ~/workspace/skills/linkedin/, then ask Muse to 'set up a LinkedIn connector' and paste your token into the secure form. Setup takes about 5 minutes." }
+    },
+    {
+      "@type": "Question",
+      "name": "What can the LinkedIn skill for Muse do?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Three things: read your LinkedIn profile (name, headline, LinkedIn ID), publish text posts up to 3000 characters with public or connections-only visibility, and list your recent posts with engagement. All through the official LinkedIn API." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does posting require my approval?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Always. Every post needs your explicit approval of the exact text in chat before anything publishes. The skill drafts the text, shows it to you verbatim, and only posts after you say go. A dry-run mode previews the exact API payload during drafting." }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does the LinkedIn access token last?",
+      "acceptedAnswer": { "@type": "Answer", "text": "LinkedIn access tokens last about 60 days. When one expires, re-mint it in the Developer Portal and reconnect — the skill tells you exactly this if a call fails with an authentication error." }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can't the skill list my recent posts?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Listing your own posts back requires LinkedIn's partner-restricted r_member_social scope, which LinkedIn only grants to approved partners. Request it in your app's Products tab; without it, the posts command reports 'not approved' instead of failing silently." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the LinkedIn skill for Muse free?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. The skill is free and MIT-licensed, and the LinkedIn API scopes it uses (profile read, posting) carry no usage fees. You just bring your own free LinkedIn developer app and access token." }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "LinkedIn Skill for Muse",
+  "url": "https://gman0n.github.io/muse-linkedin-skill/",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".lede", ".facts"]
+  }
+}
+</script>
 <style>
-  body { font-family: -apple-system, Segoe UI, Helvetica, Arial, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.55; }
-  h1 { font-size: 28px; margin-bottom: 4px; }
-  .sub { color: #555; margin-top: 0; }
-  .btn { display: inline-block; background: #0a66c2; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 600; margin: 18px 0; }
-  .btn:hover { background: #084e96; }
-  code { background: #f3f3f3; padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
-  .note { background: #f6f8fa; border-left: 4px solid #0a66c2; padding: 12px 16px; border-radius: 0 8px 8px 0; margin: 20px 0; }
-  ol { padding-left: 22px; }
-  li { margin-bottom: 8px; }
-  footer { margin-top: 36px; color: #888; font-size: 13px; }
+  :root { --blue: #0a66c2; --blue-dark: #084e96; --ink: #1a1a1a; --muted: #555; --bg: #f6f8fa; --line: #e3e8ee; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); line-height: 1.6; margin: 0; background: #fff; }
+  header.hero { background: linear-gradient(135deg, #0a66c2 0%, #084e96 100%); color: #fff; padding: 72px 20px 64px; text-align: center; }
+  header.hero h1 { font-size: clamp(30px, 5vw, 46px); margin: 0 0 12px; letter-spacing: -0.5px; }
+  header.hero .tagline { font-size: clamp(16px, 2.4vw, 20px); opacity: 0.92; max-width: 640px; margin: 0 auto 28px; }
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 13px 30px; border-radius: 8px; font-weight: 700; font-size: 16px; text-decoration: none; transition: transform .08s ease; }
+  .btn-primary { background: #fff; color: var(--blue-dark); }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.7); }
+  .btn-ghost:hover { border-color: #fff; }
+  main { max-width: 780px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 40px 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: 0; }
+  h2 { font-size: 26px; margin: 0 0 16px; letter-spacing: -0.3px; }
+  h3 { font-size: 18px; margin: 22px 0 8px; }
+  p.lede { font-size: 18px; color: var(--ink); }
+  .facts { background: var(--bg); border-left: 4px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 22px 0; }
+  .feature { margin-bottom: 20px; }
+  .feature h3 { color: var(--blue-dark); margin-bottom: 4px; }
+  .feature p { margin: 4px 0 0; color: var(--muted); }
+  .feature code, li code, p code { background: #eef1f4; padding: 2px 7px; border-radius: 4px; font-size: 0.9em; }
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li { counter-increment: step; position: relative; padding: 14px 14px 14px 58px; background: var(--bg); border-radius: 10px; margin-bottom: 12px; }
+  .steps li::before { content: counter(step); position: absolute; left: 14px; top: 14px; width: 32px; height: 32px; border-radius: 50%; background: var(--blue); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .steps li p { margin: 6px 0 0; }
+  .steps li strong { font-size: 16px; }
+  .cmd { position: relative; background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 12px 48px 12px 16px; margin: 10px 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; overflow-x: auto; white-space: nowrap; }
+  .copy { position: absolute; right: 8px; top: 8px; background: #334155; color: #fff; border: 0; border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+  .copy:hover { background: #475569; }
+  details.faq { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 10px; padding: 0; }
+  details.faq summary { padding: 14px 18px; font-weight: 600; cursor: pointer; list-style: none; }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::before { content: "+ "; color: var(--blue); font-weight: 700; }
+  details.faq[open] summary::before { content: "− "; }
+  details.faq .answer { padding: 0 18px 16px; color: var(--muted); }
+  footer { background: var(--bg); padding: 32px 20px; text-align: center; color: var(--muted); font-size: 14px; }
+  footer a { color: var(--blue); text-decoration: none; margin: 0 10px; }
+  footer a:hover { text-decoration: underline; }
+  @media (max-width: 560px) {
+    header.hero { padding: 52px 16px 44px; }
+    section { padding: 28px 0; }
+    .cmd { font-size: 12px; }
+  }
 </style>
 </head>
 <body>
-<h1>LinkedIn skill for Muse</h1>
-<p class="sub">Drop-in LinkedIn skill for Meta's Muse AI: publish posts, read your profile, and list recent posts through a secure token-based connector.</p>
-<a class="btn" href="data:application/zip;base64,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" download="linkedin-skill.zip">Download linkedin-skill.zip</a>
-<p>The package contains the generalized skill (<code>linkedin/</code> folder), a setup guide (<code>SETUP.md</code>), and API notes. No credentials included — you bring your own access token.</p>
-<h2>What you need (no client ID, no client secret)</h2>
-<p>Just one thing: <strong>your own LinkedIn access token</strong>. The skill never needs anyone's client ID or client secret — those stay with whoever owns the LinkedIn developer app.</p>
-<ol>
-<li>Go to the <a href="https://developer.linkedin.com/">LinkedIn Developer Portal</a> and open (or create) an app.</li>
-<li>Under <strong>Products</strong>, enable what you want the skill to do:
-  <ul>
-    <li><strong>Share on LinkedIn</strong> &rarr; lets the skill publish posts (<code>w_member_social</code>)</li>
-    <li><strong>Sign In with LinkedIn using OpenID Connect</strong> &rarr; lets the skill read your profile (<code>openid profile email</code>)</li>
-  </ul>
-</li>
-<li>Use the portal's <strong>token generator</strong> to mint an access token with those scopes. Copy it.</li>
-<li>Copy the <code>linkedin/</code> folder from the zip into your Muse workspace at <code>~/workspace/skills/</code> and store your access token in your platform's custom connector as a Bearer <redacted> on <code>api.linkedin.com</code>.</li>
-</ol>
-<div class="note">
-<strong>Rules of the road:</strong> the <code>post</code> command always requires your explicit approval of the exact text before anything publishes. Tokens last about 60 days — re-mint in the portal when it expires. Listing your own recent posts (<code>posts</code>) needs a partner-restricted product; without it the command reports "not approved" instead of failing silently.
-</div>
-<footer>Commands: <code>profile</code> &middot; <code>post</code> &middot; <code>posts</code> &nbsp;|&nbsp; Permanent mirror — no expiring links.</footer>
+
+<header class="hero">
+  <h1>LinkedIn Skill for Muse</h1>
+  <p class="tagline">Post to LinkedIn from Muse — publish posts, read your profile, and track engagement, all through the official LinkedIn API.</p>
+  <div class="btn-row">
+    <a class="btn btn-primary" href="#connect">Connect your LinkedIn</a>
+    <a class="btn btn-ghost" href="https://muse.ai/s/linkedin-skill-for-muse-xby6bxyjxjxmqhxr">Download the skill</a>
+  </div>
+</header>
+
+<main>
+  <section aria-labelledby="about">
+    <p class="lede" id="about">The LinkedIn Skill for Muse is a free, MIT-licensed CLI that lets Meta's Muse AI operate your LinkedIn account: publish text posts, read your profile, and list recent posts through a secure token-based LinkedIn API integration.</p>
+    <div class="facts">
+      <strong>Key facts:</strong> free and open source (MIT) &middot; setup takes about 5 minutes &middot; no client ID or client secret needed — just your own LinkedIn access token &middot; tokens last ~60 days &middot; every post requires your explicit approval of the exact text.
+    </div>
+  </section>
+
+  <section aria-labelledby="features">
+    <h2 id="features">What you can do</h2>
+
+    <article class="feature">
+      <h3>Publish posts</h3>
+      <p>Draft and publish text posts up to 3,000 characters with public or connections-only visibility. Every post is approval-gated: the skill shows you the exact text in chat and only publishes after you say go. A <code>--dry-run</code> mode previews the exact API payload while drafting, so what you approve is exactly what ships.</p>
+    </article>
+
+    <article class="feature">
+      <h3>Read your profile</h3>
+      <p>Pull your LinkedIn identity on demand — name, headline, and LinkedIn ID — so Muse always knows who it's posting as. Read-only and free to run any time.</p>
+    </article>
+
+    <article class="feature">
+      <h3>List recent posts with engagement</h3>
+      <p>Review your recent posts and how they're performing without leaving chat. Note: LinkedIn restricts this to approved partners, so it needs an extra product approval in your developer app — without it the skill reports "not approved" plainly instead of failing silently.</p>
+    </article>
+
+    <article class="feature">
+      <h3>Secure by design</h3>
+      <p>Your access token lives in the platform vault, never in chat or in files. The skill never asks for anyone's client ID or client secret, and every authenticated request goes only to <code>api.linkedin.com</code>.</p>
+    </article>
+  </section>
+
+  <section aria-labelledby="connect" id="connect">
+    <h2 id="connect-h">Connect in 4 steps</h2>
+    <ol class="steps">
+      <li>
+        <strong>Create a LinkedIn developer app</strong>
+        <p>Go to the <a href="https://developer.linkedin.com/">LinkedIn Developer Portal</a> and open or create an app. Under <strong>Products</strong>, enable <strong>Share on LinkedIn</strong> (lets the skill publish posts) and <strong>Sign In with LinkedIn using OpenID Connect</strong> (lets the skill read your profile).</p>
+      </li>
+      <li>
+        <strong>Mint an access token</strong>
+        <p>Use the portal's <strong>token generator</strong> to mint an access token with those scopes and copy it. That's the only credential the skill ever needs.</p>
+      </li>
+      <li>
+        <strong>Install the skill files</strong>
+        <div class="cmd">cp -r linkedin ~/workspace/skills/<button class="copy" onclick="copyCmd(this)">Copy</button></div>
+        <p>Get the <code>linkedin/</code> folder from the <a href="https://github.com/GMAn0n/muse-linkedin-skill">GitHub repo</a> or the <a href="https://muse.ai/s/linkedin-skill-for-muse-xby6bxyjxjxmqhxr">download page</a>.</p>
+      </li>
+      <li>
+        <strong>Connect it in Muse</strong>
+        <p>In chat, ask Muse: <em>"set up a LinkedIn connector."</em> Muse gives you a secure form — paste your access token there. It goes straight to the platform vault; never paste it in chat. Then try: <em>"read my LinkedIn profile."</em></p>
+        <div class="cmd">python3 ~/workspace/skills/linkedin/bin/linkedin.py profile<button class="copy" onclick="copyCmd(this)">Copy</button></div>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="faq">
+    <h2 id="faq">Frequently asked questions</h2>
+
+    <details class="faq">
+      <summary>How do I connect my LinkedIn account to Muse?</summary>
+      <div class="answer">Create an app in the LinkedIn Developer Portal, enable the Share on LinkedIn and Sign In with OpenID Connect products, mint an access token with the portal's token generator, copy the <code>linkedin/</code> skill folder to <code>~/workspace/skills/linkedin/</code>, then ask Muse to "set up a LinkedIn connector" and paste your token into the secure form. Setup takes about 5 minutes.</div>
+    </details>
+
+    <details class="faq">
+      <summary>What can the LinkedIn skill for Muse do?</summary>
+      <div class="answer">Three things: read your LinkedIn profile (name, headline, LinkedIn ID), publish text posts up to 3000 characters with public or connections-only visibility, and list your recent posts with engagement — all through the official LinkedIn API.</div>
+    </details>
+
+    <details class="faq">
+      <summary>Does posting require my approval?</summary>
+      <div class="answer">Always. Every post needs your explicit approval of the exact text in chat before anything publishes. The skill drafts the text, shows it to you verbatim, and only posts after you say go. A dry-run mode previews the exact API payload during drafting.</div>
+    </details>
+
+    <details class="faq">
+      <summary>How long does the LinkedIn access token last?</summary>
+      <div class="answer">LinkedIn access tokens last about 60 days. When one expires, re-mint it in the Developer Portal and reconnect — the skill tells you exactly this if a call fails with an authentication error.</div>
+    </details>
+
+    <details class="faq">
+      <summary>Why can't the skill list my recent posts?</summary>
+      <div class="answer">Listing your own posts back requires LinkedIn's partner-restricted scope, which LinkedIn only grants to approved partners. Request it in your app's Products tab; without it, the <code>posts</code> command reports "not approved" instead of failing silently.</div>
+    </details>
+
+    <details class="faq">
+      <summary>Is the LinkedIn skill for Muse free?</summary>
+      <div class="answer">Yes. The skill is free and MIT-licensed, and the LinkedIn API scopes it uses (profile read, posting) carry no usage fees. You just bring your own free LinkedIn developer app and access token.</div>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <a href="https://github.com/GMAn0n/muse-linkedin-skill">GitHub</a>
+  <a href="https://muse.ai/s/linkedin-skill-for-muse-xby6bxyjxjxmqhxr">Download page</a>
+  <p>LinkedIn Skill for Muse · Free &amp; MIT-licensed · Not affiliated with LinkedIn Corporation</p>
+</footer>
+
+<script>
+function copyCmd(btn) {
+  const cmd = btn.parentElement.textContent.replace('Copy', '').trim();
+  navigator.clipboard.writeText(cmd).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+</script>
 </body>
 </html>
