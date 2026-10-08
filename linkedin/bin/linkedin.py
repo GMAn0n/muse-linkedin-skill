@@ -3,8 +3,8 @@
 
 Subcommands:
   profile   Read the authenticated member's profile (name, person URN, email).
-  post      Publish a text post. Requires the user's explicit approval of the exact
-            text in chat BEFORE running (the agent shows the text, the user says go).
+  post      Publish a text post. Requires Sam's explicit approval of the exact
+            text in chat BEFORE running (the agent shows the text, Sam says go).
             Use --dry-run to preview the exact API payload without publishing.
   posts     List the member's recent posts with best-effort engagement counts.
 
@@ -152,6 +152,19 @@ def cmd_profile(args):
         print(f"Person URN: {profile['person_urn']}")
 
 
+def escape_commentary(text):
+    """Backslash-escape LinkedIn's 'little text' reserved characters.
+
+    The /rest/posts commentary field is NOT plain text: the characters
+    \\ | { } @ [ ] ( ) < > # * _ ~ are reserved, and LinkedIn silently
+    drops the post body from the first unescaped reserved character
+    onward (no error). Escaping makes them render literally.
+    """
+    return "".join(
+        ("\\" + ch) if ch in "\\|{}@[]()<>#*_~" else ch for ch in text
+    )
+
+
 def cmd_post(args):
     text = args.text
     if text == "-":
@@ -165,6 +178,7 @@ def cmd_post(args):
         raise LinkedInError(
             f"Post text is {len(text)} chars; LinkedIn's limit is {POST_TEXT_LIMIT}."
         )
+    text = escape_commentary(text)
     me = get_me()
     author = args.author or f"urn:li:person:{me['sub']}"
     body = {
@@ -264,6 +278,18 @@ def cmd_posts(args):
         print()
 
 
+def cmd_delete(args):
+    urn = args.urn.strip()
+    if not urn.startswith("urn:li:"):
+        raise LinkedInError(f"Not a LinkedIn URN: {urn}")
+    enc = urllib.parse.quote(urn, safe="")
+    status, _, _ = api("DELETE", f"/rest/posts/{enc}", versioned=True)
+    if args.json:
+        print(json.dumps({"status": status, "deleted": urn}, indent=2))
+    else:
+        print(f"Deleted {urn} (HTTP {status}).")
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(
         prog="linkedin.py",
@@ -275,7 +301,7 @@ def main(argv=None):
     sp.add_argument("--json", action="store_true")
     sp.set_defaults(func=cmd_profile)
 
-    sp = sub.add_parser("post", help="Publish a text post (needs the user's approval first).")
+    sp = sub.add_parser("post", help="Publish a text post (needs Sam's approval first).")
     sp.add_argument("--text", required=True,
                     help='Post text, or "-" to read from stdin.')
     sp.add_argument("--visibility", default="PUBLIC",
@@ -292,6 +318,11 @@ def main(argv=None):
     sp.add_argument("--count", type=int, default=5)
     sp.add_argument("--json", action="store_true")
     sp.set_defaults(func=cmd_posts)
+
+    sp = sub.add_parser("delete", help="Delete one of your posts by URN.")
+    sp.add_argument("--urn", required=True, help="Post URN, e.g. urn:li:share:...")
+    sp.add_argument("--json", action="store_true")
+    sp.set_defaults(func=cmd_delete)
 
     args = p.parse_args(argv)
     try:

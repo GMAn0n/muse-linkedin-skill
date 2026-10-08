@@ -20,8 +20,8 @@ If a `/rest/*` call 426s with `NONEXISTENT_VERSION`, bump `LI_VERSION` in
 Works with `openid profile email`. Returns e.g.:
 
 ```json
-{"sub": "abc123XyZ", "name": "Jane Doe", "given_name": "Jane",
- "family_name": "Doe", "email": "jane.doe@example.com",
+{"sub": "ynUlGbsqlM", "name": "Sam Clark", "given_name": "Sam",
+ "family_name": "Clark", "email": "369samclarkisfine@gmail.com",
  "email_verified": true, "picture": "...", "locale": {"country": "US", ...}}
 ```
 
@@ -31,7 +31,7 @@ Works with `openid profile email`. Returns e.g.:
 
 ```json
 {
-  "author": "urn:li:person:abc123XyZ",
+  "author": "urn:li:person:ynUlGbsqlM",
   "commentary": "Post text here (max 3000 chars)",
   "visibility": "PUBLIC",
   "distribution": {
@@ -51,6 +51,16 @@ header (`urn:li:share:...` or `urn:li:ugcPost:...`). Public URL:
 Scope probe (safe, publishes nothing): POSTing `{}` returns HTTP 422
 listing missing required fields — that 422 (not 403) proves `w_member_social`
 is granted.
+
+## Commentary escaping (critical)
+
+The `commentary` field is NOT plain text — LinkedIn parses it as "little
+text", where `\ | { } @ [ ] ( ) < > # * _ ~` are reserved. The first
+UNESCAPED reserved character silently truncates the post from that point
+onward (HTTP 201, no error; the rendered post just ends mid-sentence).
+The CLI's `escape_commentary()` backslash-escapes every reserved char
+before sending, so what you write is what renders. Never bypass it.
+Verified 2026-10-08: two posts truncated at the first `(` before the fix.
 
 ## List own posts — GET /rest/posts?q=author (scope: r_member_social)
 
